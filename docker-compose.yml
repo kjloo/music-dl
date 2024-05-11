@@ -1,12 +1,10 @@
 services:
   music-dl:
-    image: ubuntu:latest
+    image: music-dl:latest
     volumes:
       - ./output:/usr/src/app/output
       - ./input:/usr/src/app/input
     stdin_open: true
     tty: true
-    command: /bin/bash
-    working_dir: /usr/src/app
     ports:
-      - "8080:8080"  # Example port mapping if needed
+      - "8080:8080" # Example port mapping if needed

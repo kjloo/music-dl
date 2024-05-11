@@ -7,16 +7,17 @@ RUN apt update && \
     apt clean
 
 # # Clean
-# RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+RUN rm /usr/lib/python3.12/EXTERNALLY-MANAGED
 
 # # Install python package
-# RUN pip install -r input/requirements.txt
+RUN pip3 install yt-dlp
 
-# Copy scripts
-COPY app /usr/src/
+# # Copy scripts
+COPY app /usr/src/app
 
 # Set the working directory
 WORKDIR /usr/src/app
 
 # Set the entry point to run yt-dlp when the container starts
-ENTRYPOINT ["python", "music_dl.py"]
+ENTRYPOINT ["python3", "music_dl.py"]
+# ENTRYPOINT ["/bin/bash"]

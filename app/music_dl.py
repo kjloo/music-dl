@@ -1,16 +1,23 @@
-import csv
+from typing import List
+import yt_dlp
+from models.song import Song, SongCSV
+from models.album import Album
 
-def extract_first_column(input_file, output_file):
-    with open(input_file, 'r', newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        first_column = [row['Song'] for row in reader]
-    
-    with open(output_file, 'w', newline='') as output:
-        for value in first_column:
-            output.write(value + '\n')
+
+def download_audio(songs: List[Song]):
+    base_url = "https://www.youtube.com/watch?v="
+    url_list = [f"{base_url}{song.music}" for song in songs]
+    ydl_opts = {}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download(url_list)
+
 
 if __name__ == "__main__":
-    input_file = 'input/source.csv'  # Update with the name of your CSV file
-    output_file = 'output/output.txt'  # Output file name
+    input_file: str = 'input/source.csv'  # Update with the name of your CSV file
+    output_dir: str = 'output'
 
-    extract_first_column(input_file, output_file)
+    songs: List[Song] = SongCSV(input_file).read_csv()
+    # download_audio(songs)
+
+    album: Album = Album(output_dir)
+    album.download_images(songs)
