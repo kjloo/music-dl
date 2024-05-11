@@ -1,3 +1,6 @@
 # Inputs and Outputs
 input/source.csv
 output/
+
+# Python
+__pycache__
