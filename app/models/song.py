@@ -1,4 +1,7 @@
 import csv
+import yt_dlp
+
+YOUTUBE_BASE = 'https://www.youtube.com/watch?v='
 
 
 class Song:
@@ -6,6 +9,18 @@ class Song:
         self.title = title
         self.music = music
         self.album = album
+        self.options = {
+            'outtmpl': f'output/{self.title}.mp3',
+            'format': 'bestaudio/best',
+            'extract_audio': True,
+            'audioformat': 'mp3'
+        }
+
+    def download(self):
+        url = f"{YOUTUBE_BASE}{self.music}"
+
+        with yt_dlp.YoutubeDL(self.options) as ydl:
+            ydl.download(url)
 
 
 class SongCSV:
