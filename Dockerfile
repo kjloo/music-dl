@@ -12,11 +12,11 @@ RUN apt update && \
 # # Install python package
 # RUN pip install -r input/requirements.txt
 
+# Copy scripts
+COPY app /usr/src/
+
 # Set the working directory
 WORKDIR /usr/src/app
-
-# Copy scripts
-COPY music_dl.py .
 
 # Set the entry point to run yt-dlp when the container starts
 ENTRYPOINT ["python", "music_dl.py"]
