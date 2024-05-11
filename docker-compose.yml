@@ -1,10 +1,9 @@
-version: '3.9'
-
 services:
-  ubuntu-ytdlp:
+  music-dl:
     image: ubuntu:latest
     volumes:
       - ./output:/usr/src/app/output
+      - ./input:/usr/src/app/input
     stdin_open: true
     tty: true
     command: /bin/bash
