@@ -4,3 +4,6 @@ output/
 
 # Python
 __pycache__
+
+# Files
+.DS_Store
