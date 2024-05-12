@@ -4,6 +4,7 @@ FROM ubuntu:latest
 # Update packages and install necessary dependencies
 RUN apt update && \
     apt install -y python3-pip && \
+    apt install -y ffmpeg && \
     apt clean
 
 # # Clean

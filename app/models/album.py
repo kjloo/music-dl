@@ -11,8 +11,8 @@ class Album:
     def __init__(self, dst_dir: str):
         self.dst_dir = dst_dir
 
-    def _download_image(self, album: str):
-        full_link = SPOTIFY_BASE + album
+    def _download_image(self, album: str, image: str):
+        full_link = SPOTIFY_BASE + image
 
         response = urllib.request.urlopen(full_link)
         html_text = response.read().decode('utf-8')
@@ -21,9 +21,9 @@ class Album:
         s = m.search(html_text)
         image_url = s.group(1)
         urllib.request.urlretrieve(
-            image_url, os.path.join(self.dst_dir, album + '.jpg'))
+            image_url, os.path.join(self.dst_dir, album, album + '.jpg'))
 
     def download_images(self, songs: List[Song]):
-        albums = list(set([song.album for song in songs]))
+        albums = list(set([(song.album, song.image) for song in songs]))
         for album in albums:
-            self._download_image(album)
+            self._download_image(album[0], album[1])

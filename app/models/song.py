@@ -5,15 +5,20 @@ YOUTUBE_BASE = 'https://www.youtube.com/watch?v='
 
 
 class Song:
-    def __init__(self, title, music, album):
+    def __init__(self, title, music, album, image):
         self.title = title
         self.music = music
         self.album = album
+        self.image = image
         self.options = {
-            'outtmpl': f'output/{self.title}.mp3',
+            'outtmpl': f'output/{self.album}/{self.title}',
             'format': 'bestaudio/best',
-            'extract_audio': True,
-            'audioformat': 'mp3'
+            'audioformat': 'mp3',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
         }
 
     def download(self):
@@ -32,6 +37,7 @@ class SongCSV:
         with open(self.csv_file, 'r', newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                song = Song(row['Song'], row['Music'], row['Album'])
+                song = Song(row['Song'], row['Music'],
+                            row['Album'], row['Image'])
                 songs.append(song)
         return songs
