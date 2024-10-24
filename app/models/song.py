@@ -15,10 +15,15 @@ class Song:
             self.options = {
                 'outtmpl': f'output/{self.album}/{self.title}',
                 'format': 'bestvideo+bestaudio',
-                'postprocessors': [{
-                    'key': 'FFmpegVideoConvertor',
-                    'preferedformat': 'mp4',
-                }],
+                'subtitleslangs': ['en', 'jp'],
+                'postprocessors': [
+                    {
+                        'key': 'FFmpegEmbedSubtitle'
+                    },
+                    {
+                        'key': 'FFmpegVideoConvertor',
+                        'preferedformat': 'mp4',
+                    }],
             }
         else:
             self.options = {
