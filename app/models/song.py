@@ -1,5 +1,22 @@
 import csv
 import yt_dlp
+import subprocess
+
+
+def convert_vtt_to_srt(base_file: str, languages: list[str]):
+    # Construct the FFmpeg command
+    for language in languages:
+        vtt_file = f"{base_file}.{language}.vtt"
+        srt_file = f"{base_file}.{language}.srt"
+        command = ['ffmpeg', '-i', vtt_file, srt_file]
+
+        # Run the command
+        try:
+            subprocess.run(command, check=True)
+            print(f"Converted '{vtt_file}' to '{srt_file}' successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error during conversion: {e}")
+
 
 YOUTUBE_BASE = 'https://www.youtube.com/watch?v='
 
@@ -10,24 +27,27 @@ class Song:
         self.music = music
         self.album = album
         self.image = image
+        self.languages = ['ja', 'en']
         self.download_video = download_video
         if self.download_video:
             self.options = {
-                'outtmpl': f'output/{self.album}/{self.title}',
+                'outtmpl': self._create_output(),
                 'format': 'bestvideo+bestaudio',
-                'subtitleslangs': ['en', 'jp'],
+                'subtitleslangs': self.languages,
+                'writesubtitles': True,
                 'postprocessors': [
-                    {
-                        'key': 'FFmpegEmbedSubtitle'
-                    },
                     {
                         'key': 'FFmpegVideoConvertor',
                         'preferedformat': 'mp4',
+                    },
+                    {
+                        'already_have_subtitle': True,
+                        'key': 'FFmpegEmbedSubtitle'
                     }],
             }
         else:
             self.options = {
-                'outtmpl': f'output/{self.album}/{self.title}.mp3',
+                'outtmpl': f'{self._create_output()}.mp3',
                 'format': 'bestaudio/best',
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
@@ -41,6 +61,11 @@ class Song:
 
         with yt_dlp.YoutubeDL(self.options) as ydl:
             ydl.download(url)
+        if self.download_video:
+            convert_vtt_to_srt(self._create_output(), self.languages)
+
+    def _create_output(self) -> str:
+        return f'output/{self.album}/{self.title}'
 
 
 class SongCSV:
