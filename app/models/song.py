@@ -5,21 +5,31 @@ YOUTUBE_BASE = 'https://www.youtube.com/watch?v='
 
 
 class Song:
-    def __init__(self, title, music, album, image):
+    def __init__(self, title: str, music: str, album: str, image: str, download_video: bool):
         self.title = title
         self.music = music
         self.album = album
         self.image = image
-        self.options = {
-            'outtmpl': f'output/{self.album}/{self.title}',
-            'format': 'bestaudio/best',
-            'audioformat': 'mp3',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-        }
+        self.download_video = download_video
+        if self.download_video:
+            self.options = {
+                'outtmpl': f'output/{self.album}/{self.title}',
+                'format': 'bestvideo+bestaudio',
+                'postprocessors': [{
+                    'key': 'FFmpegVideoConvertor',
+                    'preferedformat': 'mp4',
+                }],
+            }
+        else:
+            self.options = {
+                'outtmpl': f'output/{self.album}/{self.title}.mp3',
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+            }
 
     def download(self):
         url = f"{YOUTUBE_BASE}{self.music}"
@@ -38,6 +48,6 @@ class SongCSV:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 song = Song(row['Song'], row['Music'],
-                            row['Album'], row['Image'])
+                            row['Album'], row['Image'], row['Video'].lower() == "true")
                 songs.append(song)
         return songs
