@@ -47,7 +47,7 @@ class Song:
             }
         else:
             self.options = {
-                'outtmpl': f'{self._create_output()}.mp3',
+                'outtmpl': f'{self._create_output()}',
                 'format': 'bestaudio/best',
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
