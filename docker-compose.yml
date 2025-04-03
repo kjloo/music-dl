@@ -1,6 +1,6 @@
 services:
   music-dl:
-    image: music-dl:latest
+    build: .
     env_file: .env
     volumes:
       - ./output:/usr/src/app/output
